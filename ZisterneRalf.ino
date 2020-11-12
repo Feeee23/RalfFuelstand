@@ -281,9 +281,9 @@ void loop(){
 }
 
 /* ToDo:
- * Diagram zeichnen
- * stecker
- * verteilerdose
+ * Email Abfrage verbesser evtl. andere Programiersprachen 
+ * 
+ * 
  * historie verlängern?
  * Bilder
  */
