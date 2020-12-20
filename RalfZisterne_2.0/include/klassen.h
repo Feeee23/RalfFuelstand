@@ -7,6 +7,7 @@ struct Fuellstand { //Struct erstellen
     int hoehe;
     int liter;
     int unix;
+    int Zaehler;
     struct Fuellstand* next;
 };
 
@@ -26,6 +27,14 @@ void erstellen(struct Fuellstand** Liste, int F, int L, unsigned int Unix, bool 
         F1->next=*Liste;
     }
     *Liste=F1;
+    if(F1->next!=NULL){ //Gib jedem eine Unike Nummer
+        F1->Zaehler=F1->next->Zaehler+1;
+    } else{ //wenn erster eintrag
+        F1->Zaehler=1;
+    }
+    if(F1->next->Zaehler==NULL){ //wenn letzter eintrag keine Nummer
+        F1->Zaehler=1;
+    }
 
     if(Speichern){//die Werte auch noch in den EEPROM schreiben
         int Pos=EEPROM.read(SpeicherPos)*15; //lese die aktuelle Speicherpos aus
@@ -47,11 +56,16 @@ void erstellen(struct Fuellstand** Liste, int F, int L, unsigned int Unix, bool 
     }
 }
 
-String getDiagramWerte(struct Fuellstand* Liste ){ //Element ausgeben
+String getDiagramWerte(struct Fuellstand* Liste ){ //Element ausgeben, bisher noch falschrum links das neuste
     String s;
     struct Fuellstand* F;
     F=Liste;
+    int i=20;
     while(F->next!=NULL){
+        i++;
+        if(i>20){ //gib nur 20 Werte in das Diagramm
+            break;
+        }
         String k="['";
         if (day(Liste->unix)<10){
         k+=0;

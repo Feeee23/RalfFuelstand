@@ -79,6 +79,9 @@ void setup() {
 }
 
 void loop() {
+  if(Liste->Zaehler>1700){ //wenn der Speicher mit Instanzen voll ist Restarte
+    ESP.reset();
+  }
   timeClient.update();
   
   if(hour(timeClient.getEpochTime())==2 && timeClient.getEpochTime()>(letzteAbfrage+4000)){ //wenn es 2uhr ist und mind 4000s später als die letzte Automatische Abrage (>1h)
@@ -176,8 +179,5 @@ void loop() {
 * Auf Email reagieren
 * mehrere WebSeiten
 * Eventuell Gmail nochmal aktivieren
-* github link
 * Wenn eine min>10 vor null fällt weg
-* max anzahl an Karten/Messwerte
-* max ausgabe tabelle und diagram
 */
