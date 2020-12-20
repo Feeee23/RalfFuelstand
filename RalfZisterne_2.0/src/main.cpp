@@ -61,10 +61,20 @@ void setup() {
   messageVoll.subject="Zisterne Leer";
   messageVoll.message="Die Zisterne ist nur noch unter 200cm voll";
 
-  /*if(Liste==NULL){ //Keine Messwerte vorhanden  //geht noch nicht!!!!!
-    Serial.println("hans");
-    if(int(EEPROM.read(SpeicherPos))!=NULL){//check den EEPROM
-      Serial.println("Klaus");
+  if(Liste==NULL){ //Keine Messwerte vorhanden 
+    if((EEPROM.read(SpeicherPos))>=1){//check den EEPROM
+      /*EEPROM.write(SpeicherPos, 1); // Speicher leeren
+      for(int q=0;q<SpeicherPos;q++){
+        EEPROM.write(q, 0);
+      }
+      EEPROM.commit();*/
+      /*int hh=0; //Speicher Ausgeben muss noch in ASCII übersetzt werden
+      Serial.println("test");
+      for(hh=0;hh<=SpeicherPos;hh++){
+        Serial.print(hh);
+        Serial.print(" , ");
+        Serial.println(EEPROM.read(hh));
+      }*/
       getValueEEPROM(SpeicherPos, &Liste);//Einlesen
       KartenRechner(Liste);//geb den Eintägen noch die Liter
     } else{//sonst leere Karte erstellen
@@ -74,8 +84,7 @@ void setup() {
       EEPROM.commit();
       
     }
-  }*/
-    erstellen(&Liste, 0, 0, 0, false, 0);
+  }
 }
 
 void loop() {
@@ -98,8 +107,7 @@ void loop() {
       EMailSender::Response resp=emailSend.send(empfaenger, messageLeer);
     } else if (F>200){ //wenn fast voll
       EMailSender::Response resp=emailSend.send(empfaenger, messageVoll);
-    }
-    
+    } 
 }
 
   WiFiClient client = server.available();
@@ -112,7 +120,7 @@ void loop() {
       currentTime = millis();         
       if (client.available()) {             // if there's bytes to read from the client,
         char c = client.read();             // read a byte, then
-
+      
         Serial.write(c);                    // print it out the serial monitor
         header += c;
         if (c == '\n') {                    // if the byte is a newline character
@@ -138,14 +146,15 @@ void loop() {
               unsigned int Unix=(timeClient.getEpochTime()+j); //Sommer/Winterzeit 
               erstellen(&Liste, F, L, Unix, true, SpeicherPos);
               /////////////////////////////////////////////////////////////testAusgabe
+              /*
               int hh=0;
               Serial.println("test");
               for(hh=0;hh<=SpeicherPos;hh++){
                 Serial.print(hh);
                 Serial.print(" , ");
                 Serial.println(EEPROM.read(hh));
-              }
-            } 
+              }*/
+            }
             if (header.indexOf("GET /7/on") >= 0){ //email Button
               messageAnfrage.subject="Anfrage Zisternenfüllstand";
               int F=Sensor();// Abfrage starten
@@ -156,7 +165,6 @@ void loop() {
               messageAnfrage.message=EmailAnfrage(Liste);
               EMailSender::Response resp=emailSend.send(empfaenger, messageAnfrage);
             }             
-
             client.println(SendStandartseite(getDiagramWerte(Liste), getTabellenWerte(Liste),j));
           } else { // if you got a newline, then clear currentLine
               currentLine = "";
@@ -175,9 +183,8 @@ void loop() {
   }
 }
 /* ToDo
-* dauerspeicher, umspeichern und löschen
 * Auf Email reagieren
 * mehrere WebSeiten
 * Eventuell Gmail nochmal aktivieren
-* Wenn eine min>10 vor null fällt weg
+* Diagram ist falschrum neuestes links
 */
