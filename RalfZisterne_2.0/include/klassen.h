@@ -60,38 +60,33 @@ String getDiagramWerte(struct Fuellstand* Liste ){ //Element ausgeben, bisher no
     String s;
     struct Fuellstand* F;
     F=Liste;
+    int Anzahl=20;
     int i=0;
-    while(F->next!=NULL){
-        i++;
-        if(i>20){ //gib nur 20 Werte in das Diagramm
-            break;
-        }
+    int liter[Anzahl];
+    unsigned int unix[Anzahl];
+    for(i=0; i<Anzahl; i++){ //speicher alle werte umgegkehrt in Arrays damit die Ausgabe richtig rum ist
+        liter[Anzahl-1-i]=F->liter;
+        unix[Anzahl-1-i]=F->unix;
+        F=F->next;
+    }
+    for(i=0; i<Anzahl; i++){
         String k="['";
-        if (day(F->unix)<10){
-        k+=0;
+        if(day(unix[i])<10){
+            k+=0;
         }
-        k+=day(F->unix); //Datum
+        k+=day(unix[i]);
         k+=".";
-        if (month(F->unix)<10){
-        k+=0;
+        if(month(unix[i])<10){
+            k+=0;
         }
-        k+=month(F->unix);
+        k+=month(unix[i]);
         k+=".";
-        if (year(F->unix)<10){
-        k+=0;
-        }
-        k+=year(F->unix);
+        k+=year(unix[i]);
         k+="', ";
-        k+=F->liter; //Liter
-        if(F->next==NULL){
-            k+="]";  //am ende einmal ohne Komma
-        } else{
-            k+="],";
-        }
-        
+        k+=liter[i]; //Liter
+        k+="],";
         s+=k;
         //Zielformat['19.09.2020', 200],
-        F=F->next;
     }
     return s;
 }
@@ -224,4 +219,46 @@ void getValueEEPROM(int SpeicherPos, struct Fuellstand** Liste){
         erstellen(Liste,h, 0, UNIX, false, 0);//erstelle eine karte   
             
     }
+}
+
+String getAdminValue(struct Fuellstand* Liste, int SpeicherPos){
+    String s;
+    s+="<p>Letzte Abrage: ";
+    s+=Liste->hoehe;
+    s+="cm</p>";
+    s+="<p>Entspricht: ";
+    s+=Liste->liter;
+    s+="Litern</p>";
+    s+="<p>UNIX: ";
+    s+=Liste->unix;
+    s+="</p>";
+    s+="<p>Anzahl: ";
+    s+=Liste->Zaehler;
+    s+="</p><br>";
+    int i=0;
+    s+="<p>SpeicherPos, SpeicherWert</p>";
+    for(i=0; i<=SpeicherPos; i++){
+        if(i==0){
+            s+="<p>-----1-----</p>";
+        }
+        s+="<p>";
+        s+=i;
+        s+=" , ";
+        s+=EEPROM.read(i);
+        s+="</p>";
+        if(((i+1)%15)==0){
+            s+="<p>-----";
+            s+=((i+1)/15)+1;
+            s+="-----</p>";
+        }
+    }
+    
+    return s;
+    /* Ziel
+        <p>Letzte Abrage:</p>
+        <p>Entspricht Litern</p>
+        <p>UNIX</p>
+        <p>Anzahl</p>
+        <p>Die Verschiebung betraegt</p>
+    */
 }

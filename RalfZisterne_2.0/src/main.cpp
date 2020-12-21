@@ -4,6 +4,7 @@
 #include <WiFiUdp.h>
 #include <EMailSender.h>
 #include <EEPROM.h>
+#include <string.h>
 //////eigene Libs
 #include <EigHTML.h>
 #include <klassen.h>
@@ -11,6 +12,12 @@
 
 const char* ssid="Paradieswerkstatt"; //"AndroidAPp";//"WLAN Ralf"
 const char* password="k*H#96*c*Z#93";//"vjjb1674"; //"44727291469489115864"
+
+String AdminID="123";
+String AdminPW="456";
+String headSoll="GET /get?Benutzername="+AdminID+"&Eingabe_Passwort="+AdminPW+" ";
+char buffer[100];
+String Key;
 
 WiFiServer server(80);///AsyncWebServer server(80); //Server instanz, Port?
 
@@ -56,10 +63,10 @@ void setup() {
   timeClient.begin();
   server.begin();
   //Emails Voll/Leer
-  messageLeer.subject="Zisterne Voll";
-  messageLeer.message="Die Zisterne ist über 50cm voll.";
-  messageVoll.subject="Zisterne Leer";
-  messageVoll.message="Die Zisterne ist nur noch unter 200cm voll";
+  messageLeer.subject="Zisterne ist fast leer";
+  messageLeer.message="Die Zisterne nur noch unter 50cm voll.";
+  messageVoll.subject="Zisterne ist fast voll";
+  messageVoll.message="Die Zisterne ist über 200cm voll";
 
   if(Liste==NULL){ //Keine Messwerte vorhanden 
     if((EEPROM.read(SpeicherPos))>=1){//check den EEPROM
@@ -145,9 +152,7 @@ void loop() {
               timeClient.update();
               unsigned int Unix=(timeClient.getEpochTime()+j); //Sommer/Winterzeit 
               erstellen(&Liste, F, L, Unix, true, SpeicherPos);
-              /////////////////////////////////////////////////////////////testAusgabe
-              /*
-              int hh=0;
+              /*int hh=0;//test Speicher Ausgabe
               Serial.println("test");
               for(hh=0;hh<=SpeicherPos;hh++){
                 Serial.print(hh);
@@ -164,7 +169,30 @@ void loop() {
               erstellen(&Liste, F, L, Unix, true, SpeicherPos);
               messageAnfrage.message=EmailAnfrage(Liste);
               EMailSender::Response resp=emailSend.send(empfaenger, messageAnfrage);
-            }             
+            }      
+            if(header.indexOf("GET /8/on")>=0){ //Anmelde Seite
+              client.println(AnmeldeSeite);
+              continue;
+            }
+            headSoll.toCharArray(buffer,100); //Anmeldung bei der Seite
+            if(memcmp(header.c_str(), buffer, strlen(buffer))==0||Key=="admin"){///////////////falsch
+              client.println(SendAdminBereich(getAdminValue(Liste, SpeicherPos), header.c_str()));
+              //Key="admin"; //////////Noch implementieren
+              continue;
+            }
+            if(header.indexOf("GET /reset")>=0){ //reset über Software
+              Serial.println("reset");
+              ESP.reset();
+            }
+            if(header.indexOf("GET /Speicherleeren")>=0){ //EEPROM Speicher leer machen
+              Serial.println("Speicher Leeren");
+              EEPROM.write(SpeicherPos, 1); // Speicher leeren
+              for(int q=0;q<SpeicherPos;q++){
+                EEPROM.write(q, 0);
+              }
+              EEPROM.commit();
+            }       
+            
             client.println(SendStandartseite(getDiagramWerte(Liste), getTabellenWerte(Liste),j));
           } else { // if you got a newline, then clear currentLine
               currentLine = "";
@@ -184,7 +212,6 @@ void loop() {
 }
 /* ToDo
 * Auf Email reagieren
-* mehrere WebSeiten
 * Eventuell Gmail nochmal aktivieren
-* Diagram ist falschrum neuestes links
+* Speicher leeren?
 */

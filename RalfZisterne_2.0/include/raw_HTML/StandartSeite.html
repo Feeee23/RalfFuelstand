@@ -24,6 +24,11 @@
             var options = {
                 curveType: 'none',
                 legend: 'none',
+                hAxis: { 
+        						 
+       							slantedText: true, 
+        						slantedTextAngle: 90 // here you can even use 180 
+   					     }
             };
             var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
 
@@ -62,11 +67,12 @@
 <body>
     <h1>Ralf's Zisternen Fuellstand</h1>
     <p>neue Abfrage:</p>
-    <p><a href="/5/on"><button class="button">Start</button></a><a href='/'><button class="button" style='background-color:#228B22'>aktualisieren</button></a></p>
+    <p><a href="/5/on"><button class="button">Start</button></a>
+        <a href='/'><button class="button" style='background-color:#228B22'>aktualisieren</button></a></p>
     <p><a href="/6/off"><button class="button" style='background-color:#3399ff'>Winterzeit aktivieren</button></a></p>
-    <p>Der letzte gemessene Fuellstand sind<b> 135cm</b></p>
-    <p>Dies entspricht ungefaehr<b> 4963Liter</b></p> <br>
+    
     <div style=' width: auto; height: 500px' id='curve_chart'></div>
+    <br> <br>
     <table style='width:100%'>
         <tr>
             <th style='border-top:hidden;border-bottom:hidden;'></th>
@@ -91,7 +97,7 @@
         </tr>
     </table> <br>
     <div align='right'>
-        <a href='/7/on'><i class='fas fa-envelope-open-text fa-2x' ;></i></a>
+        <a href='/7/on'><i class='fas fa-envelope-open-text fa-2x'style='color: green;' ;></i></a>
         <a href='/8/on'><i class="fas fa-unlock-alt fa-2x" style="color: black;"></i></a>
         <p align='right'>Die aktuelle Version 2.0 des Quellcodes gibt es <a href='https://github.com/Feeee23/RalfFuelstand/tree/2.0_PlatformIO'>hier</a></p>
     </div>

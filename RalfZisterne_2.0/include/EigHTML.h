@@ -30,6 +30,10 @@ const char StandartSeite2[] = R"rawliteral(
                     var options = {
                         curveType: 'none',
                         legend: 'none',
+                        hAxis: {  
+       							slantedText: true, 
+        						slantedTextAngle: 90 // here you can even use 180 
+   					     }
                     };
                     var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
 
@@ -72,9 +76,8 @@ const char StandartSeite2[] = R"rawliteral(
                 )rawliteral";
             //<p><a href="/6/off"><button class="button" style='background-color:#3399ff'>Winterzeit aktivieren</button></a></p>
 const char StandartSeite3[] = R"rawliteral(
-            <p>Der letzte gemessene Fuellstand sind<b> 135cm</b></p>
-            <p>Dies entspricht ungefaehr<b> 4963Liter</b></p> <br>
             <div style=' width: auto; height: 500px' id='curve_chart'></div>
+            <br> <br>
             <table style='width:100%'>
                 <tr>
                     <th style='border-top:hidden;border-bottom:hidden;'></th>
@@ -101,7 +104,7 @@ const char StandartSeite3[] = R"rawliteral(
 const char StandartSeite4[] = R"rawliteral(
         </table> <br>
             <div align='right'>
-                <a href='/7/on'><i class='fas fa-envelope-open-text fa-2x' ;></i></a>
+                <a href='/7/on'><i class='fas fa-envelope-open-text fa-2x' style="color: green;" ;></i></a>
                 <a href='/8/on'><i class="fas fa-unlock-alt fa-2x" style="color: black;"></i></a>
                 <p align='right'>Die aktuelle Version 2.0 des Quellcodes gibt es <a href='https://github.com/Feeee23/RalfFuelstand/tree/2.0_PlatformIO'>hier</a></p>
             </div>
@@ -111,12 +114,83 @@ const char StandartSeite4[] = R"rawliteral(
     )rawliteral";
 
 const char AnmeldeSeite[] = R"rawliteral(
+    <!DOCTYPE HTML>
+    <html>
+
+    <head>
+        <title>Anmeldedaten eingeben</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name='author' content='Felix Girke'>
+        <link rel="icon" href='https://tse2.mm.bing.net/th?id=OIP.-rQg8T0gZNSX-8BivY33vgHaHa&o=6&pid=Api'>
+        <style>
+            html {
+                font-family: Helvetica;
+                display: inline-block;
+                margin: 0px auto;
+                text-align: center;
+            }
+        </style>
+    </head>
+
+    <body>
+        <a href='/'><button class="button" style='background-color:#228B22'>Zurueck</button></a>
+        <br> <br>
+        <p>Gib bitte den Benutzername und das Passwort ein:</p>
+        <br>
+        <form action="/get">
+            Benutzername: <input type="text" name="Benutzername">
+            <br><br>
+            Passwort: <input type="password" name="Eingabe_Passwort"> <br> <br>
+            <input type="submit" value="Submit">
+        </form>
+        <br>
+    </body>
+    </html>
 
     )rawliteral";  
 
 const char AdminBereich[] = R"rawliteral(
+    <!DOCTYPE html>
+    <html>
 
+    <head>
+        <title>Admin Seite</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name='author' content='Felix Girke'>
+        <link rel="icon" href='https://tse2.mm.bing.net/th?id=OIP.-rQg8T0gZNSX-8BivY33vgHaHa&o=6&pid=Api'>
+        <style>
+            html {
+                font-family: Helvetica;
+                display: inline-block;
+                margin: 0px auto;
+                text-align: center;
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <p>Gib die Abweichung des Ergebnisses ein:</p>
+        <br>
+        <form action="/get">
+            Abweichnung: <input type="text" name="Abweichnung"> cm
+            <br><br>
+            <input type="submit" value="Submit">
+        </form>
+        <br>   
     )rawliteral";
+
+String SendAdminBereich(String Werte, String Header){
+    String s=AdminBereich;
+    s+=Werte;
+    s+="<p>";
+    s+=Header;
+    s+="</p>";
+    s+="<a href='/'><button class='button' style='background-color:#228B22'>Zurueck</button></a></body></html><br><br>";
+    s+="<a href='/reset'><button class='button' style='background-color: red'>reset</button></a><br><br>";
+    s+="<a href='/Speicherleeren'><button class='button' style='background-color: violet'>Speicher Leeren</button></a>";
+    return s;
+}
 
 String SendStandartseite(String Dia, String Tab, int j){ //baut die Standart Seite zusammen
     String s=StandartSeite1;
