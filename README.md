@@ -7,3 +7,5 @@ Version:
 <li>1.2 == -Email _Updates: email komunikation hinzu </li>
 <li>2.0 == Umstellung auf PlatformIO und Dauerspeicher für die letzten 20 Einträge</li>
   </ul>
+
+<h2>Documentaition</h2>
