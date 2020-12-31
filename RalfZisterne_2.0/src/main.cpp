@@ -10,8 +10,8 @@
 #include <klassen.h>
 #include <Sensor.h>
 
-const char* ssid="Paradieswerkstatt"; //"AndroidAPp";//"WLAN Ralf"
-const char* password="k*H#96*c*Z#93";//"vjjb1674"; //"44727291469489115864"
+const char* ssid="YOUR_SSID"; 
+const char* password="YOUR_PASSWORD";
 
 String AdminID="123";
 String AdminPW="456";
@@ -35,9 +35,9 @@ WiFiUDP ntpUDP; //Fuer die Package´s die von den Zeit Server zu holen sind
 long utcOffsetInSeconds = 3600; // offset von UTF zeit (zur Witerzeit, zur Sommerzeit erhöhen auf 7200)
 NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds); //Adresse und Client für die Zeit desfinieren
 
-EMailSender emailSend("ralfszisterne@gmail.com", "A#dCa3D-;yky"); //Email
-const char* empfaenger = "felix.girke@web.de";
-const char* empfaenger2="ralfszisterne@gmail.com"; //zum selbst emailen
+EMailSender emailSend("YOUR_GMAIL_TO_SEND", "YOUR_GMAIL_PASSWORD"); //Email
+const char* empfaenger = "YOUR_EMAIL_TO_RECIVE";
+const char* empfaenger2="YOUR_GMAIL_TO_SEND"; //zum selbst emailen
 EMailSender::EMailMessage messageVoll;
 EMailSender::EMailMessage messageLeer;
 EMailSender::EMailMessage messageAnfrage;
